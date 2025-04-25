@@ -6,7 +6,7 @@ spec:
   acme:
     # Servidor de staging do Let's Encrypt (não produz certificados confiáveis, apenas para testes)
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: seu-email@example.com
+    email: root@nochaos.io
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
@@ -23,7 +23,7 @@ spec:
   acme:
     # Servidor de produção do Let's Encrypt (produz certificados válidos)
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: seu-email@example.com
+    email: root@nochaos.io
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:

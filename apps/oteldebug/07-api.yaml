@@ -107,3 +107,31 @@ spec:
       target:
         type: Utilization
         averageUtilization: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oteldebug-api-ingress
+  namespace: oteldebug
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - api.oteldebug.nochaos.io     
+    secretName: api-tls
+  rules:
+  - host: api.oteldebug.nochaos.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api                
+            port:
+              number: 8080

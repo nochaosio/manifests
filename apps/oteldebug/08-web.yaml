@@ -8,9 +8,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
+  - port: 443
     targetPort: 80
-    name: http
+    name: https
   selector:
     app: web
 ---
@@ -31,8 +31,34 @@ spec:
     spec:
       containers:
       - name: web
-        image: your-registry/oteldebug-web:latest
+        image: nochaos/oteldebug-web:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
           name: http
+
+---
+kind: Ingress
+metadata:
+  name: oteldebug-web-ingress
+  namespace: oteldebug
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - oteldebug.nochaos.io
+    secretName: landing-tls
+  rules:
+  - host: oteldebug.nochaos.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 443

@@ -117,13 +117,13 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    #nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
       - api.oteldebug.nochaos.io     
-    secretName: api-tls
+    secretName: landing-tls
   rules:
   - host: api.oteldebug.nochaos.io
     http:

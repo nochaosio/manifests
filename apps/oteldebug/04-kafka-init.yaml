@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-init
+  namespace: oteldebug
+spec:
+  template:
+    metadata:
+      labels:
+        app: kafka-init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kafka-init
+        image: confluentinc/cp-kafka:7.9.0
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Waiting for Kafka to be ready..."
+          kafka-topics --bootstrap-server kafka:29092 --list
+
+          echo "Creating topics..."
+          kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic otel-traces --replication-factor 1 --partitions 1
+          kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic otel-metrics --replication-factor 1 --partitions 1
+          kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic otel-logs --replication-factor 1 --partitions 1
+
+          echo "Topics created successfully:"
+          kafka-topics --bootstrap-server kafka:29092 --list
